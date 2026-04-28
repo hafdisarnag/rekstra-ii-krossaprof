@@ -1,5 +1,6 @@
 
 import React, { useMemo, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { questionBank, sections } from "./data.js";
 
 function shuffleArray(arr) {
@@ -57,14 +58,17 @@ export default function App() {
 
   if (quiz && current >= quiz.length) {
     return (
-      <main className="page">
-        <section className="hero result">
-          <p className="eyebrow">Niðurstaða</p>
-          <h1>{score} / {quiz.length}</h1>
-          <p>Þú kláraðir prófið.</p>
-          <button className="primary" onClick={() => setQuiz(null)}>Velja aftur</button>
-        </section>
-      </main>
+      <>
+        <Analytics />
+        <main className="page">
+          <section className="hero result">
+            <p className="eyebrow">Niðurstaða</p>
+            <h1>{score} / {quiz.length}</h1>
+            <p>Þú kláraðir prófið.</p>
+            <button className="primary" onClick={() => setQuiz(null)}>Velja aftur</button>
+          </section>
+        </main>
+      </>
     );
   }
 
@@ -72,110 +76,116 @@ export default function App() {
     const q = quiz[current];
     const progress = ((current + 1) / quiz.length) * 100;
     return (
-      <main className="page quiz-page">
-        <div className="topbar">
-          <button className="ghost" onClick={() => setQuiz(null)}>↻ Hætta og velja aftur</button>
-        </div>
-        <div className="progress"><span style={{ width: `${progress}%` }} /></div>
-        <p className="muted">Spurning {current + 1} af {quiz.length}</p>
-        <p className="section-label">{q.sectionLabel}</p>
-        <article className="question-card">
-          <div className="badges">
-            <span>{q.type === "image-review" ? "MYND ÚR SKJALI" : q.options.length + " VALMÖGULEIKAR"}</span>
-            <span>Rekstra II</span>
+      <>
+        <Analytics />
+        <main className="page quiz-page">
+          <div className="topbar">
+            <button className="ghost" onClick={() => setQuiz(null)}>↻ Hætta og velja aftur</button>
           </div>
-
-          <h2>{q.prompt}</h2>
-
-          {q.image && <img className="question-image" src={q.image} alt="Mynd með spurningu úr skjalinu" />}
-
-          <div className="options">
-            {q.options.map((opt) => {
-              const isRight = opt === q.answer;
-              const isPicked = opt === selectedAnswer;
-              let cls = "option";
-              if (answered && isRight) cls += " correct";
-              if (answered && isPicked && !isRight) cls += " wrong";
-              return (
-                <button key={opt} className={cls} onClick={() => choose(opt)}>
-                  {opt}
-                </button>
-              );
-            })}
-          </div>
-
-          {answered && (
-            <div className="feedback">
-              <strong>{selectedAnswer === q.answer ? "Rétt" : "Rangt"}</strong>
-              {q.type === "image-review" ? (
-                <p>Þessi spurning er sett inn sem nákvæm mynd úr skjalinu, þannig að rétt svar sést á myndinni sjálfri.</p>
-              ) : (
-                <p>Rétt svar: <b>{q.answer}</b></p>
-              )}
-              <button className="primary next" onClick={next}>
-                {current + 1 === quiz.length ? "Klára próf" : "Næsta spurning"}
-              </button>
+          <div className="progress"><span style={{ width: `${progress}%` }} /></div>
+          <p className="muted">Spurning {current + 1} af {quiz.length}</p>
+          <p className="section-label">{q.sectionLabel}</p>
+          <article className="question-card">
+            <div className="badges">
+              <span>{q.type === "image-review" ? "MYND ÚR SKJALI" : q.options.length + " VALMÖGULEIKAR"}</span>
+              <span>Rekstra II</span>
             </div>
-          )}
-        </article>
-      </main>
+
+            <h2>{q.prompt}</h2>
+
+            {q.image && <img className="question-image" src={q.image} alt="Mynd með spurningu úr skjalinu" />}
+
+            <div className="options">
+              {q.options.map((opt) => {
+                const isRight = opt === q.answer;
+                const isPicked = opt === selectedAnswer;
+                let cls = "option";
+                if (answered && isRight) cls += " correct";
+                if (answered && isPicked && !isRight) cls += " wrong";
+                return (
+                  <button key={opt} className={cls} onClick={() => choose(opt)}>
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+
+            {answered && (
+              <div className="feedback">
+                <strong>{selectedAnswer === q.answer ? "Rétt" : "Rangt"}</strong>
+                {q.type === "image-review" ? (
+                  <p>Þessi spurning er sett inn sem nákvæm mynd úr skjalinu, þannig að rétt svar sést á myndinni sjálfri.</p>
+                ) : (
+                  <p>Rétt svar: <b>{q.answer}</b></p>
+                )}
+                <button className="primary next" onClick={next}>
+                  {current + 1 === quiz.length ? "Klára próf" : "Næsta spurning"}
+                </button>
+              </div>
+            )}
+          </article>
+        </main>
+      </>
     );
   }
 
   const selectedInfo = sections.find((s) => s.id === selectedSection);
   return (
-    <main className="page">
-      <section className="hero">
-        <div>
-          <p className="eyebrow">Rekstra II</p>
-          <h1>Krossapróf úr skjalinu</h1>
-          <p>Spurningarnar eru teknar úr skjalinu. Textaspurningarnar nota sömu valmöguleika og sama rétta svar og var merkt í skjalinu. Myndaspurningar eru birtar sem nákvæmar myndir úr skjalinu.</p>
-        </div>
-        <div className="stats">
-          <strong>{questionBank.length}</strong>
-          <span>spurningar/myndir</span>
-        </div>
-      </section>
+    <>
+      <Analytics />
+      <main className="page">
+        <section className="hero">
+          <div>
+            <p className="eyebrow">Rekstra II</p>
+            <h1>Krossapróf úr skjalinu</h1>
+            <p>Spurningarnar eru teknar úr skjalinu. Textaspurningarnar nota sömu valmöguleika og sama rétta svar og var merkt í skjalinu. Myndaspurningar eru birtar sem nákvæmar myndir úr skjalinu.</p>
+          </div>
+          <div className="stats">
+            <strong>{questionBank.length}</strong>
+            <span>spurningar/myndir</span>
+          </div>
+        </section>
 
-      <section className="layout">
-        <div className="panel">
-          <h2>Veldu efni</h2>
-          <div className="grid">
-            {sections.map((s) => (
-              <button
-                key={s.id}
-                className={selectedSection === s.id ? "tile active" : "tile"}
-                onClick={() => setSelectedSection(s.id)}
-              >
-                <span className="badge">{s.count} sp.</span>
-                <b>{s.title}</b>
-                <small>{s.subtitle}</small>
-              </button>
-            ))}
+        <section className="layout">
+          <div className="panel">
+            <h2>Veldu efni</h2>
+            <div className="grid">
+              {sections.map((s) => (
+                <button
+                  key={s.id}
+                  className={selectedSection === s.id ? "tile active" : "tile"}
+                  onClick={() => setSelectedSection(s.id)}
+                >
+                  <span className="badge">{s.count} sp.</span>
+                  <b>{s.title}</b>
+                  <small>{s.subtitle}</small>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <aside className="panel setup">
-          <h2>Stilla próf</h2>
-          <label>Valinn hluti</label>
-          <div className="selected-box">
-            <b>{selectedInfo.title}</b>
-            <span>Hámark {available.length} spurningar í þessu vali.</span>
-          </div>
-          <label>Fjöldi spurninga</label>
-          <select value={questionCount} onChange={(e) => setQuestionCount(e.target.value)}>
-            <option value="10">10 spurningar</option>
-            <option value="15">15 spurningar</option>
-            <option value="25">25 spurningar</option>
-            <option value="all">Allar spurningar</option>
-          </select>
-          <div className="notice">
-            <b>Athugið</b>
-            <p>Ég lét textaspurningarnar vera eins og þær eru í skjalinu, líka stafsetningu/innsláttarvillur, svo þetta passi við glósuskjalið þitt.</p>
-          </div>
-          <button className="primary" onClick={startQuiz}>Hefja próf</button>
-        </aside>
-      </section>
-    </main>
+          <aside className="panel setup">
+            <h2>Stilla próf</h2>
+            <label>Valinn hluti</label>
+            <div className="selected-box">
+              <b>{selectedInfo.title}</b>
+              <span>Hámark {available.length} spurningar í þessu vali.</span>
+            </div>
+            <label>Fjöldi spurninga</label>
+            <select value={questionCount} onChange={(e) => setQuestionCount(e.target.value)}>
+              <option value="10">10 spurningar</option>
+              <option value="15">15 spurningar</option>
+              <option value="25">25 spurningar</option>
+              <option value="all">Allar spurningar</option>
+            </select>
+            <div className="notice">
+              <b>Athugið</b>
+              <p>Ég lét textaspurningarnar vera eins og þær eru í skjalinu, líka stafsetningu/innsláttarvillur, svo þetta passi við glósuskjalið þitt.</p>
+            </div>
+            <button className="primary" onClick={startQuiz}>Hefja próf</button>
+          </aside>
+        </section>
+      </main>
+    </>
   );
 }
