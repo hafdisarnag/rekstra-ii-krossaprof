@@ -1,5 +1,6 @@
 
 import React, { useMemo, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { questionBank, sections } from "./data.js";
 
 function shuffleArray(arr) {
@@ -64,6 +65,7 @@ export default function App() {
           <p>Þú kláraðir prófið.</p>
           <button className="primary" onClick={() => setQuiz(null)}>Velja aftur</button>
         </section>
+        <Analytics />
       </main>
     );
   }
@@ -118,6 +120,7 @@ export default function App() {
             </div>
           )}
         </article>
+        <Analytics />
       </main>
     );
   }
@@ -176,6 +179,7 @@ export default function App() {
           <button className="primary" onClick={startQuiz}>Hefja próf</button>
         </aside>
       </section>
+      <Analytics />
     </main>
   );
 }
